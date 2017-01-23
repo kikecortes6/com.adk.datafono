@@ -12,13 +12,13 @@ import org.json.JSONArray;
 
 
 public class Comdata extends CordovaPlugin {
-private CallbackContext callbackContext;
+ private CallbackContext callbackContext;
+      private String test="hola Mundo";
 
     @Override
     public boolean execute(String action, final JSONArray args, CallbackContext callbackContext) {
       
-      private CallbackContext callbackContext;
-      private String test="hola Mundo";
+     
   
        if (action.equals("test")) {
           callbackContext.success(test);
