@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.plugin.gpsstatus"
+        version="1.0.0">
+
+    <name>Gpsstatus</name>
+ <engines>
+    <engine name="cordova" version=">=3.4.0"/>
+  </engines>
+         <asset src="www/gpsstatus.js" target="js/gpsstatus.js"/>
+        <js-module src="www/gpsstatus.js" name="gpsstatus">
+<clobbers target="gpsstatus" />
+   
+  </js-module> 
+    <platform name="android">
+             <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-feature android:name="android.hardware.location.gps" />
+            <receiver android:name=".gps.GpsLocationReceiver">
+        <intent-filter>
+            <action android:name="android.location.PROVIDERS_CHANGED" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </receiver>
+        </config-file>
+    
+ <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="Gpsstatus">
+        <param name="android-package" value="com.plugin.gpsstatus.Gpsstatus"/>
+      </feature>
+    </config-file>
+   
+
+    <source-file src="src/android/Gpsstatus.java" target-dir="src/com/plugin/gpsstatus/"/>
+   
+    
+  </platform>
+    
+</plugin>
