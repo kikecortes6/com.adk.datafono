@@ -14,6 +14,7 @@ import org.json.JSONArray;
 public class Comdata extends CordovaPlugin {
  private CallbackContext callbackContext;
       private String test="hola Mundo";
+ private String saludo;
 
     @Override
     public boolean execute(String action, final JSONArray args, CallbackContext callbackContext) {
@@ -21,9 +22,14 @@ public class Comdata extends CordovaPlugin {
      
   
        if (action.equals("test")) {
+        saudo=test+args;
           callbackContext.success(test);
     
-        }
+        }else if(action.equals("testing")){
+         saudo=test+args;
+        callbackContext.success(saludo);
+        
+       }
         
         
       
