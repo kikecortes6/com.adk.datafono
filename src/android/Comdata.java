@@ -22,7 +22,7 @@ public class Comdata extends CordovaPlugin {
      
   
        if (action.equals("test")) {
-        saudo=test+args;
+      
           callbackContext.success(test);
     
         }else if(action.equals("testing")){
