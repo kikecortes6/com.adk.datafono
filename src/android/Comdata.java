@@ -26,7 +26,7 @@ public class Comdata extends CordovaPlugin {
           callbackContext.success(test);
     
         }else if(action.equals("testing")){
-         saudo=test+args;
+         saludo=test+args;
         callbackContext.success(saludo);
         
        }
