@@ -33,12 +33,7 @@ class PclServiceConnection implements ServiceConnection {
                 mPclService = (PclService) binder.getService();
 
            }
-
-        public void onServiceDisconnected(ComponentName className) {
-
-                mPclService = null; 
-
-            }
+  
   public class LocalBinder extends Binder {
         PclServiceConnection getService() {
             // Return this instance of LocalService so clients can call public methods
@@ -46,6 +41,13 @@ class PclServiceConnection implements ServiceConnection {
         }
     }
 
+
+        public void onServiceDisconnected(ComponentName className) {
+
+                mPclService = null; 
+
+            }
+  
     };
   
   // You can call this method in onCreate for instance
