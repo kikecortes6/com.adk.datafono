@@ -53,7 +53,15 @@ Intent intent = new Intent(this, PclService.class);
 bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
 }
-  
+  // You can call this method in onDestroy for instance
+
+private void releaseService()
+
+{
+
+unbindService(mServiceConnection);
+
+}
   
   
   
