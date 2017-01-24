@@ -9,6 +9,7 @@ import org.apache.cordova.PluginResult;
 import org.apache.cordova.PluginResult.Status;
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
+import android.os.IBinder;
 
 
 
