@@ -7,6 +7,7 @@ import android.app.*;
 import android.os.IBinder;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
+import android.content.Context;
 
 public class Datafono extends Activity {
   // Declare PclService interface
