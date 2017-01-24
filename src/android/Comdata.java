@@ -10,6 +10,8 @@ import org.apache.cordova.PluginResult.Status;
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
 import android.os.IBinder;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 
 
 
