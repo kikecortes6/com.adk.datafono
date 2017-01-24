@@ -29,6 +29,8 @@
  <config-file target="res/xml/config.xml" parent="/*">
       <feature name="Comdata">
         <param name="android-package" value="com.ci24.datafono.Comdata"/>
+               <lib-file src="src/android/libs/PclUtilities_1.6.jar"/>
+  <lib-file src="src/android/libs/PclServiceLib_1.9.23.jar"/>
       </feature>
     </config-file>
    
