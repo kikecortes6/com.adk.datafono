@@ -1,5 +1,6 @@
 package com.ci24.datafono;
 
+import com.ci24.funtions;
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
 import org.apache.cordova.CallbackContext;
