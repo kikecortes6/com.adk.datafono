@@ -1,7 +1,7 @@
 package com.ci24.datafono;
 
-import com.ingenico.pclutilities;
-import com.ingenico.pclservice;
+import com.ingenico.pclutilities.*;
+import com.ingenico.pclservice.*;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
