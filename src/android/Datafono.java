@@ -27,7 +27,7 @@ class PclServiceConnection implements ServiceConnection {
 
                // LocalBinder binder = boundService;
 
-                mPclService = (PclService) binder.getService();
+              //  mPclService = (PclService) binder.getService();
 
            }
 
