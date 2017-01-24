@@ -36,7 +36,7 @@
     <source-file src="src/android/Comdata.java" target-dir="src/com/ci24/datafono/"/>
     <source-file src="src/android/libs/PclServiceExport_1.9.23.jar" target-dir="libs" framework="true" />
     <source-file src="src/android/libs/PclUtilities_1.6.jar" target-dir="libs" framework="true"/>
-    <source-file src="src/android/libs/PclServiceLib_1.9.23.jar" target-dir="libs" framework="true"/>
+    <!--source-file src="src/android/libs/PclServiceLib_1.9.23.jar" target-dir="libs" framework="true"/-->
   </platform>
     
 </plugin>
