@@ -20,9 +20,9 @@ class PclServiceConnection implements ServiceConnection {
 
         public void onServiceConnected(ComponentName className, IBinder boundService ){
 
-                          // We've bound to LocalService, cast the IBinder and get LocalService
+                          // We've bound to LocalService, cast the IBinder and get LocalService instance
 
-                instance LocalBinder binder = (LocalBinder) boundService;
+                LocalBinder binder = (LocalBinder) boundService;
 
                 mPclService = (PclService) binder.getService();
 
