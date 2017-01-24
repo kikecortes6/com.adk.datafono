@@ -38,6 +38,19 @@ class PclServiceConnection implements ServiceConnection {
             }
 
     };
+  // You can call this method in onCreate for instance
+
+private void initService()
+
+{
+
+mServiceConnection = new PclServiceConnection();
+
+Intent intent = new Intent(this, PclService.class);
+
+bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+}
   
   
   
