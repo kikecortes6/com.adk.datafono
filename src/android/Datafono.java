@@ -14,6 +14,28 @@ protected PclService mPclService = null;
   
   private PclServiceConnection mServiceConnection;
   
+  // Implement ServiceConnection
+
+class PclServiceConnection implements ServiceConnection {
+
+        public void onServiceConnected(ComponentName className, IBinder boundService ){
+
+                          // We've bound to LocalService, cast the IBinder and get LocalService
+
+                instance LocalBinder binder = (LocalBinder) boundService;
+
+                mPclService = (PclService) binder.getService();
+
+           }
+
+        public void onServiceDisconnected(ComponentName className) {
+
+                mPclService = null; 
+
+            }
+
+    };
+  
   
   
   
