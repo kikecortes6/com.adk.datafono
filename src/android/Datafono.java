@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.content.Context;
 import android.content.Intent;
+import 	android.os.Binder;
 
 public class Datafono extends Activity {
   // Declare PclService interface
@@ -38,8 +39,15 @@ class PclServiceConnection implements ServiceConnection {
                 mPclService = null; 
 
             }
+  public class LocalBinder extends Binder {
+        PclServiceConnection getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return PclServiceConnection.this;
+        }
+    }
 
     };
+  
   // You can call this method in onCreate for instance
 
 private void initService()
