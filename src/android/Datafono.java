@@ -30,14 +30,14 @@ class PclServiceConnection implements ServiceConnection {
 
                 LocalBinder binder = (LocalBinder) boundService;
 
-                mPclService = binder.getService();
+                mPclService = (PclService) binder.getService();
 
            }
   
   public class LocalBinder extends Binder {
-        PclServiceConnection getService() {
+        PclService getService() {
             // Return this instance of LocalService so clients can call public methods
-            return PclServiceConnection.this;
+            return PclService.this;
         }
     }
 
