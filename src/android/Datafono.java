@@ -30,7 +30,7 @@ class PclServiceConnection implements ServiceConnection {
 
                 LocalBinder binder = (LocalBinder) boundService;
 
-                mPclService = (PclService) binder.getService();
+                mPclService = binder.getService();
 
            }
   
