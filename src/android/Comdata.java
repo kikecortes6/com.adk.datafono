@@ -1,6 +1,6 @@
 package com.ci24.datafono;
 
-import com.ci24.functions.*;
+import com.ci24.functions.PclServiceConnection;
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
 import org.apache.cordova.CallbackContext;
@@ -20,6 +20,7 @@ import android.content.ServiceConnection;
 public class Comdata extends CordovaPlugin {
  private CallbackContext callbackContext;
       private String test="hola Mundo";
+ private String ser="Servicio Iniciado";
  private String saludo;
 
     @Override
@@ -34,6 +35,10 @@ public class Comdata extends CordovaPlugin {
         }else if(action.equals("testing")){
          saludo=test+args;
         callbackContext.success(saludo);
+        
+       }else if(action.equals("pcl")){
+       PclServiceConnection.initService();
+         callbackContext.success(ser);
         
        }
         
