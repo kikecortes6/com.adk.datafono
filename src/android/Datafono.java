@@ -23,7 +23,7 @@ protected PclService mPclService = null;
   
   // Implement ServiceConnection
 
-class PclServiceConnection implements ServiceConnection {
+public class PclServiceConnection implements ServiceConnection {
 
         public void onServiceConnected(ComponentName className, IBinder boundService ){
 
