@@ -7,8 +7,10 @@ import java.util.Random;
 import android.app.Service;
 import 	android.os.Binder;
 import android.content.Intent;
+import com.ingenico.pclutilities.*;
+import com.ingenico.pclservice.*;
 
-public class LocalService extends Service {
+public class LocalService extends PclService  {
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     // Random number generator
