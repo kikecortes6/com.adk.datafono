@@ -1,6 +1,6 @@
 package com.ci24.datafono;
 
-import com.ci24.functions.Datafono.PclServiceConnection;
+import com.ci24.functions.Datafono;
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
 import org.apache.cordova.CallbackContext;
@@ -37,7 +37,7 @@ public class Comdata extends CordovaPlugin {
         callbackContext.success(saludo);
         
        }else if(action.equals("pcl")){
-       PclServiceConnection.initService();
+       Datafono.initService();
          callbackContext.success(ser);
         
        }
