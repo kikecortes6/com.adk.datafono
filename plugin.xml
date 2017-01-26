@@ -41,6 +41,11 @@
     <!--source-file src="src/android/libs/PclServiceExport_1.9.23.jar" target-dir="libs" framework="true" /-->
     <source-file src="src/android/libs/PclUtilities_1.6.jar" target-dir="libs" framework="true"/>
     <source-file src="src/android/libs/PclServiceLib_1.9.23.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/libs/armeabi/libpclapi.so" target-dir="libs/armeabi" framework="true"/>
+    <source-file src="src/android/libs/armeabi/libpclnetwork.so" target-dir="libs/armeabi" framework="true"/>
+    <source-file src="src/android/libs/armeabi/libpcltools.so" target-dir="libs/armeabi" framework="true"/>
+    <source-file src="src/android/libs/armeabi/libtlvtree.so" target-dir="libs/armeabi" framework="true"/>
+            
   </platform>
     
 </plugin>
