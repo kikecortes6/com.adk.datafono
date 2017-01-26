@@ -8,7 +8,7 @@ module.exports = (function() {
       cordova.exec(successCallback, errorCallback, "Comdata", "testing", [args]);
     };
   var _subscribe =function (successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "Subscribe", []);
+      cordova.exec(successCallback, errorCallback, "Comdata", "pcl", []);
     };
   
    return {
