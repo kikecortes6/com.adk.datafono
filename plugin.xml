@@ -27,7 +27,10 @@
         </config-file>
     
  <config-file target="res/xml/config.xml" parent="/*">
+         <service android:name="com.ingenico.pclservice.PclService"/>
+         <service android:name="com.ingenico.pclservice.BluetoothService"/>
       <feature name="Comdata">
+              
         <param name="android-package" value="com.ci24.datafono.Comdata"/>
                <lib-file src="src/android/libs/PclUtilities_1.6.jar"/>
   <lib-file src="src/android/libs/PclServiceLib_1.9.23.jar"/>
