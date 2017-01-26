@@ -12,7 +12,7 @@ import android.content.Intent;
 import 	android.os.Binder;
 import android.provider.ContactsContract;
 
-import com.ci24.local.LocalService.LocalBinder;
+
 
 public class Datafono {
   // Declare PclService interface
@@ -45,9 +45,9 @@ public class PclServiceConnection implements ServiceConnection {
 
                           // We've bound to LocalService, cast the IBinder and get LocalService instance
 
-                LocalBinder binder = (LocalBinder) boundService;
 
-                mPclService = (PclService) binder.getService();
+          PclService.LocalBinder binder = (PclService.LocalBinder) boundService;
+          mPclService = (PclService) binder.getService();
 
            }
  /*  public class LocalBinder extends Binder {
