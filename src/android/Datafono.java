@@ -10,17 +10,33 @@ import android.content.ServiceConnection;
 import android.content.Context;
 import android.content.Intent;
 import 	android.os.Binder;
+import android.provider.ContactsContract;
+
 import com.ci24.local.LocalService.LocalBinder;
 
-public class Datafono extends Activity {
+public class Datafono {
   // Declare PclService interface
 
 protected PclService mPclService = null;
 
 // Declare Serviceconnection
-  
+private static Datafono datafono;
+
+  public static Datafono getInstance(){
+
+    if(datafono == null){
+        datafono = new Datafono();
+    }
+    return datafono;
+
+  }
+
+
+
+
+
   private PclServiceConnection mServiceConnection;
-  
+
   // Implement ServiceConnection
 
 public class PclServiceConnection implements ServiceConnection {
@@ -40,42 +56,43 @@ public class PclServiceConnection implements ServiceConnection {
             return PclServiceConnection.this;
         }
     }*/
-  
- 
+
+
 
 
         public void onServiceDisconnected(ComponentName className) {
 
-                mPclService = null; 
+                mPclService = null;
 
             }
-  
+
     };
-  
+
   // You can call this method in onCreate for instance
 
-private void initService()
+public  void  initService(Activity act)
 
 {
 
 mServiceConnection = new PclServiceConnection();
 
-Intent intent = new Intent(this, PclService.class);
+Intent intent = new Intent(act, PclService.class);
 
-bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+act.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
 }
   // You can call this method in onDestroy for instance
 
-private void releaseService()
+private void releaseService(Activity act)
 
 {
 
-unbindService(mServiceConnection);
+  act.unbindService(mServiceConnection);
 
 }
-  
-  
-  
-  
+
+
+
+
 };
+
