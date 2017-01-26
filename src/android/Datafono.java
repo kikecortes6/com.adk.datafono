@@ -3,7 +3,10 @@ package com.ci24.functions;
 
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
+
+import android.annotation.SuppressLint;
 import android.app.*;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
@@ -11,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import 	android.os.Binder;
 import android.provider.ContactsContract;
+import android.content.BroadcastReceiver;
 
 
 
@@ -19,7 +23,12 @@ public class Datafono {
 
 protected PclService mPclService = null;
 
-// Declare Serviceconnection
+
+
+
+
+
+
 private static Datafono datafono;
 
   public static Datafono getInstance(){
@@ -29,6 +38,22 @@ private static Datafono datafono;
     }
     return datafono;
 
+  }
+  public boolean isCompanionConnected()
+  {
+    boolean bRet = false;
+    if (mPclService != null)
+    {
+      byte result[] = new byte[1];
+      {
+        if (mPclService.serverStatus(result) == true)
+        {
+          if (result[0] == 0x10)
+            bRet = true;
+        }
+      }
+    }
+    return bRet;
   }
 
 
@@ -83,7 +108,7 @@ act.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 }
   // You can call this method in onDestroy for instance
 
-private void releaseService(Activity act)
+public void releaseService(Activity act)
 
 {
 
