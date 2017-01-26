@@ -45,6 +45,14 @@ public class Comdata extends CordovaPlugin {
          Datafono.getInstance().releaseService(getActivity());
          callbackContext.success(ser);
 
+       }else if(action.equals("f")){
+      
+       }
+     else if(action.equals("s")){
+       
+       }
+     else if(action.equals("t")){
+        
        }
 
 
