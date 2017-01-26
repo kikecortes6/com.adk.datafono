@@ -1,20 +1,20 @@
 
 module.exports = (function() {
 
-  var _test = function (successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "test", []);
+  var _connect = function (successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "init", []);
     };
-  var _opengps =function (args,successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "testing", [args]);
+  var _checkConnection =function (args,successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "check", [args]);
     };
-  var _subscribe =function (successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "pcl", []);
+  var _disconnect =function (successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "finish", []);
     };
   
    return {
-    test: _test,
-    testing: _opengps,
-    subscribe:_subscribe
+    connect: _connect,
+    checkConnection: _checkConnection,
+    disconnect:_disconnect
   
 
   };
