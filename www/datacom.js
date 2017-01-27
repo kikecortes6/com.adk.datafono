@@ -14,7 +14,7 @@ module.exports = (function() {
       cordova.exec(successCallback, errorCallback, "Comdata", "f", []);
     };
   var _transactionEX =function (args,successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "transactionEX ", [args]);
+      cordova.exec(successCallback, errorCallback, "Comdata", "transactionEX", [args]);
     };
   var _tFunction =function (successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "t", []);
