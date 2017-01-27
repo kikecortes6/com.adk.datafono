@@ -57,7 +57,7 @@ public class Comdata extends CordovaPlugin {
            callbackContext.success("Error Opening Barcode");
          }
        }
-     else if(action.equals("s")){
+     else if(action.equals("transactionEX")){
          int appNumber=0;
          TransactionIn transIn = new TransactionIn();
          TransactionOut transOut = new TransactionOut();
