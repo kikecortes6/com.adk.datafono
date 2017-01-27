@@ -13,7 +13,7 @@ module.exports = (function() {
   var _fFunction = function (successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "f", []);
     };
-  var _sFunction =function (args,successCallback, errorCallback) {
+  var _transactionEX =function (args,successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "s", [args]);
     };
   var _tFunction =function (successCallback, errorCallback) {
@@ -25,7 +25,7 @@ module.exports = (function() {
     checkConnection: _checkConnection,
     disconnect:_disconnect,
     fFunction:_fFunction,
-    sFunction:_sFunction,
+    transactionEX:_transactionEX,
     tFunction:_tFunction
   
 
