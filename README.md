@@ -25,7 +25,7 @@ datacom.transactionEX
 
      datacom.connect
 
-#
+
 
 datacom.connect(function (data) {
 //Conecction successfull
