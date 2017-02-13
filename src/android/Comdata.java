@@ -1,4 +1,5 @@
 package com.ci24.datafono;
+import com.ci24.Interfaces.IfaceCallbackDatafono;
 import com.ci24.functions.Datafono;
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
@@ -15,82 +16,159 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.util.Log;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+
+import static android.R.attr.name;
 import static org.apache.cordova.device.Device.TAG;
 
-public class Comdata extends CordovaPlugin {
- private CallbackContext callbackContext;
+
+
+
+
+
+public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
+  public CallbackContext callbackContext;
  private String test="Conexion Iniciada";
  private String ser="Servicio Finalizado";
- private String saludo;
-  private Datafono datafono;
-  protected PclService mPclService;
+
+  byte[] extDataOut = new byte[5000];
 
   public Activity getActivity() {    return this.cordova.getActivity();  }
-  private Intent getIntent() {     return getActivity().getIntent();   }
-  private void setIntent(Intent intent) {     getActivity().setIntent(intent);   }
+ // private Intent getIntent() {     return getActivity().getIntent();   }
+ // private void setIntent(Intent intent) {     getActivity().setIntent(intent);   }
 
  @Override
-    public boolean execute(String action, final JSONArray args, CallbackContext callbackContext) {
+
+    public boolean execute(String action, final JSONArray args,final  CallbackContext callbackContext) throws JSONException {
 
        if (action.equals("init")) {
-         Datafono.getInstance().initService(getActivity());
-          callbackContext.success(test);
+         try {
+           Datafono.getInstance().initService(getActivity());
+           callbackContext.success(test);
+         }catch (Exception e){
+           callbackContext.error(e.toString());
+         }
+
 
         }else if(action.equals("check")){
           boolean check= Datafono.getInstance().isCompanionConnected();
             if(check==true){
               callbackContext.success("Connected");
             }else{
-              callbackContext.success("Not Connected");
+              callbackContext.error("Not Connected");
             }
 
        }else if(action.equals("finish")){
-         Datafono.getInstance().releaseService(getActivity());
-         callbackContext.success(ser);
+         try {
+           Datafono.getInstance().releaseService(getActivity());
+           callbackContext.success(ser);
+         }catch (Exception e){
+           callbackContext.error(e.toString());
+         }
 
        }else if(action.equals("f")){
-      boolean barC=Datafono.getInstance().openBarCode();
-         if(barC==true){
-           callbackContext.success("Barcode Open");
-         }else{
-           callbackContext.success("Error Opening Barcode");
-         }
+
+         byte[] extDataOut2= extDataOut;
+
+         Log.d(TAG, "ingenico");
+         Log.d(TAG, String.valueOf(extDataOut2.length));
+         callbackContext.error("trans");
+
+
+
        }
      else if(action.equals("transactionEX")){
-         int appNumber=0;
-         TransactionIn transIn = new TransactionIn();
-         TransactionOut transOut = new TransactionOut();
-      //   transIn.setAmount("000000500000");
-      //   transIn.setCurrencyCode("978");
-      //   transIn.setOperation("C");
-      //   transIn.setTermNum("58");
-      //   transIn.setAuthorizationType("0");
-      //   transIn.setCtrlCheque("0");
-      //   transIn.setUserData1("Oscar");
+         this.callbackContext = callbackContext;
+         cordova.getThreadPool().execute(new Runnable() {
+           @Override
+           public void run() {
+             TransactionIn transIn = new TransactionIn();
+             TransactionOut transOut = new TransactionOut();
 
 
-        // byte[] extDataIn = new byte[0];
-        JSONArray dataIn=args;
-         byte extDataIn[]=new byte[]{(byte)0xFC,(byte)0x56,(byte)0xDF,(byte)0xFF,(byte)0x25,(byte)0x0A,(byte)0x37,(byte)0x36,(byte)0x44,(byte)0x46,(byte)0x42,(byte)0x46,(byte)0x37,(byte)0x33,(byte)0x42,(byte)0x35,(byte)0x9A,(byte)0x03,(byte)0x17,(byte)0x01,(byte)0x26,(byte)0x9F,(byte)0x21,(byte)0x03,(byte)0x12,(byte)0x28,(byte)0x00,(byte)0xDC,(byte)0x01,(byte)0x0A,(byte)0xDF,(byte)0xFE,(byte)0x53,(byte)0x0A,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x32,(byte)0x20,(byte)0x20,(byte)0x20,(byte)0x20,(byte)0xDF,(byte)0xFF,(byte)0x2B,(byte)0x0A,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x31,(byte)0x20,(byte)0x20,(byte)0x20,(byte)0x20,(byte)0xDF,(byte)0xFE,(byte)0x40,(byte)0x06,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x09,(byte)0x00,(byte)0x00,(byte)0xDF,(byte)0xFF,(byte)0x22,(byte)0x06,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x08,(byte)0x97,(byte)0x98,(byte)0xDF,(byte)0xFF,(byte)0x23,(byte)0x06,(byte)0x00,(byte)0x00,(byte)0x08,(byte)0x79,(byte)0x87,(byte)0x98};
-         byte[] extDataOut = new byte[8000];
-         long[] sizebuff=new long[8000];
+             long[] sizebuff = new long[5000];
 
-         int sizeIn=88;
+             String amount = new String();
+             String currencyCode = new String();
+             String operation = new String();
+             String termNum = new String();
+             String authorizationType = new String();
+             String ctrlCheque = new String();
+             String userData1 = new String();
+             JSONArray trama = new JSONArray();
+             int appNumber = 0;
+             int sizeIn = 0;
+             JSONArray obj = new JSONArray();
+             obj = args;
+             try {
+               for (int i = 0; i < obj.length(); i++) {
+                 JSONObject jsonobject = obj.getJSONObject(i);
+                 amount = jsonobject.getString("Amount");
+                 currencyCode = jsonobject.getString("CurrencyCode");
+                 operation = jsonobject.getString("Operation");
+                 termNum = jsonobject.getString("TermNum");
+                 authorizationType = jsonobject.getString("AuthorizationType");
+                 ctrlCheque = jsonobject.getString("CtrlCheque");
+                 userData1 = jsonobject.getString("UserData1");
+                 appNumber = jsonobject.getInt("AppNumber");
+                 trama = jsonobject.getJSONArray("Trama");
+               }
+             } catch (Exception e) {
+               Log.d(TAG, e.toString());
+               callbackContext.error(e.toString());
+              // return true;
 
+             }
+             sizeIn = trama.length();
 
-         Datafono.getInstance().doTransactionEx(transIn,transOut,appNumber,extDataIn,sizeIn,extDataOut,sizebuff);
+             if (!amount.equals("")) { transIn.setAmount(amount); }
+             if (!currencyCode.equals("")) { transIn.setCurrencyCode(currencyCode);}
+             if (!operation.equals("")) { transIn.setOperation(operation); }
+             if (!termNum.equals("")) { transIn.setTermNum(amount); }
+             if (!authorizationType.equals("")) { transIn.setAuthorizationType(authorizationType); }
+             if (!ctrlCheque.equals("")) { transIn.setCtrlCheque(ctrlCheque); }
+             if (!userData1.equals("")) { transIn.setUserData1(userData1); }
 
+             byte tramaIn[] = new byte[sizeIn];
+             for (int i = 0; i < sizeIn; i++) {
+               try {
+                 tramaIn[i] = (byte) Integer.parseInt(trama.getString(i));
+                 if (tramaIn[i] < 0) {
+                   tramaIn[i] =  tramaIn[i];
+                 }
+               } catch (Exception e) {
+                 Log.d(TAG, e.toString());
+                 callbackContext.error(e.toString());
+               }
+             }
 
-         callbackContext.success("transacition");
+             boolean check = Datafono.getInstance().isCompanionConnected();
 
+             if (check == true) {
+               try {
+                 Log.d(TAG, "Amount:" + transIn.getAmount() + " Currency:" + transIn.getCurrencyCode() + " Operation:" + transIn.getOperation());
+                 Log.d(TAG, "TermNum:" + transIn.getTermNum() + " AuthoType:" + transIn.getAuthorizationType() + " CtrlCheque:" + transIn.getCtrlCheque());
+                 Log.d(TAG, "UserData:" + transIn.getUserData1());
 
+                 Datafono.getInstance().doTransactionEx(Comdata.this, transIn, transOut, appNumber, tramaIn, sizeIn, extDataOut, sizebuff);
+
+               } catch (Exception e) {
+                 Log.d(TAG, e.toString());
+                 callbackContext.error(e.toString());
+                }
+             } else {
+               callbackContext.error("Device Not Connected");
+             }
+           }
+         });
+         return true;
        }
      else if(action.equals("t")){
          TransactionIn transIn = new TransactionIn();
          TransactionOut result=new TransactionOut();
-
-
          String amount = "995";
          transIn.setAmount(amount);
          transIn.setCurrencyCode("978");
@@ -98,20 +176,14 @@ public class Comdata extends CordovaPlugin {
          transIn.setTermNum("58");
          Log.d(TAG,"envio Tramas!!!!");
          boolean trans = Datafono.getInstance().doTransaction(transIn,result);
-
          callbackContext.success("getInfo");
-
        }
-
-
-
-
-
-
         return true;
-
     }
 
 
-
+  @Override
+  public void responseDatafono(JSONArray response) {
+    callbackContext.success(response);
+  }
 }
