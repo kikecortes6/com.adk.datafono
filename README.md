@@ -23,7 +23,7 @@ datacom.checkConnection
 datacom.disconnect
 datacom.transactionEX
 
-     datacom.connect
+datacom.connect
 
 
 
