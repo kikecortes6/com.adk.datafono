@@ -23,7 +23,7 @@ datacom.checkConnection
 datacom.disconnect
 datacom.transactionEX
 
-     #datacom.connect
+     datacom.connect
 
 #
 
@@ -34,7 +34,7 @@ datacom.connect(function (data) {
       console.log(err);
     });
     
-    # datacom.checkConnection
+     datacom.checkConnection
 #
  datacom.checkConnection(function (data) {
        //Connected
@@ -43,7 +43,7 @@ datacom.connect(function (data) {
         console.log(err);
       })
       
-    # datacom.disconnect
+     datacom.disconnect
 #
 datacom.disconnect(function (data) {
       //Disconecction successfull
