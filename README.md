@@ -25,7 +25,7 @@ datacom.transactionEX
 
      #datacom.connect
 
-Returns an string 
+#
 
 datacom.connect(function (data) {
 //Conecction successfull
@@ -34,8 +34,8 @@ datacom.connect(function (data) {
       console.log(err);
     });
     
-    #datacom.checkConnection
-
+    # datacom.checkConnection
+#
  datacom.checkConnection(function (data) {
        //Connected
        },function (err) {
@@ -43,8 +43,8 @@ datacom.connect(function (data) {
         console.log(err);
       })
       
-    #datacom.disconnect
-
+    # datacom.disconnect
+#
 datacom.disconnect(function (data) {
       //Disconecction successfull
     },function (err) {
@@ -52,8 +52,8 @@ datacom.disconnect(function (data) {
       console.log(err);
     });
     
-    #datacom.transactionEX
-    
+    # datacom.transactionEX
+    #
     var args= {
     "Amount": "",
     "CurrencyCode": "",
