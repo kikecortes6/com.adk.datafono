@@ -1,4 +1,4 @@
-cordova.define("com.ci24.datafono.datacom", function(require, exports, module) {
+
 
 module.exports = (function() {
 
@@ -34,4 +34,3 @@ module.exports = (function() {
 
 })();
 
-});
