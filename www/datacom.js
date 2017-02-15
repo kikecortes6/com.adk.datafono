@@ -1,8 +1,9 @@
+cordova.define("com.ci24.datafono.datacom", function(require, exports, module) {
 
 module.exports = (function() {
 
-  var _connect = function (successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "init", []);
+  var _connect = function (args,successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "connect", [args]);
     };
   var _checkConnection =function (args,successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "check", [args]);
@@ -10,25 +11,27 @@ module.exports = (function() {
   var _disconnect =function (successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "finish", []);
     };
-  var _fFunction = function (successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "f", []);
+  var _init = function (args,successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "init", [args]);
     };
   var _transactionEX =function (args,successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "transactionEX", [args]);
     };
-  var _tFunction =function (successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "t", []);
+  var _getDevices =function (successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "devices", []);
     };
-  
+
    return {
     connect: _connect,
     checkConnection: _checkConnection,
     disconnect:_disconnect,
-    fFunction:_fFunction,
+    init:_init,
     transactionEX:_transactionEX,
-    tFunction:_tFunction
-  
+    getDevices:_getDevices
+
 
   };
 
 })();
+
+});
