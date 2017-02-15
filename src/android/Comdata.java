@@ -20,34 +20,59 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+import java.util.Set;
 
 import static android.R.attr.name;
 import static org.apache.cordova.device.Device.TAG;
 
-
-
-
-
-
 public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
-  public CallbackContext callbackContext;
- private String test="Conexion Iniciada";
- private String ser="Servicio Finalizado";
 
-  byte[] extDataOut = new byte[5000];
+  public CallbackContext transactionCB;
+  public CallbackContext connectionCB;
+  public  CallbackContext disconnectCB;
+  public CallbackContext devicesCB;
 
-  public Activity getActivity() {    return this.cordova.getActivity();  }
- // private Intent getIntent() {     return getActivity().getIntent();   }
- // private void setIntent(Intent intent) {     getActivity().setIntent(intent);   }
+
+ private String start="Conexion Iniciada";
+ private String finish="Servicio Finalizado";
+ byte[] extDataOut = new byte[5000];
+ public Activity getActivity() {    return this.cordova.getActivity();  }
+
+  private static Comdata comdata;
+  public static Comdata getInstance(){
+  if(comdata == null){ comdata = new Comdata(); }
+    return comdata;
+  }
 
  @Override
-
     public boolean execute(String action, final JSONArray args,final  CallbackContext callbackContext) throws JSONException {
 
-       if (action.equals("init")) {
+       if (action.equals("connect")) {
          try {
-           Datafono.getInstance().initService(getActivity());
-           callbackContext.success(test);
+           cordova.getThreadPool().execute(new Runnable() {
+             @Override
+             public void run() {
+           //    Datafono.getInstance().startPclService(getActivity());
+
+               String mac= null;
+               try {
+                 mac = (String)args.getString(0);
+               } catch (JSONException e) {
+                 Log.d(TAG,e.toString());
+                 return;
+
+               }
+
+               try {
+                 Datafono.getInstance().pairCompanion(getActivity(),mac,Comdata.this);
+               } catch (Exception e) {
+                 e.printStackTrace();
+                 return;
+               }
+             }
+           });
+           this.connectionCB=callbackContext;
+          // callbackContext.success(start);
          }catch (Exception e){
            callbackContext.error(e.toString());
          }
@@ -63,25 +88,47 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
 
        }else if(action.equals("finish")){
          try {
-           Datafono.getInstance().releaseService(getActivity());
-           callbackContext.success(ser);
+           this.disconnectCB=callbackContext;
+           cordova.getThreadPool().execute(new Runnable() {
+             @Override
+             public void run() {
+               Datafono.getInstance().releaseService(getActivity(), Comdata.this);
+
+
+             }
+             });
+
          }catch (Exception e){
-           callbackContext.error(e.toString());
+           callbackContext.success(e.toString());
          }
 
-       }else if(action.equals("f")){
 
-         byte[] extDataOut2= extDataOut;
+       }else if(action.equals("init")){
 
-         Log.d(TAG, "ingenico");
-         Log.d(TAG, String.valueOf(extDataOut2.length));
-         callbackContext.error("trans");
+
+             String appName=null;
+             try {
+               appName=(String) args.getString(0);
+             } catch (JSONException e) {
+
+               callbackContext.error(e.toString());
+               return true;
+
+             }
+             Datafono.getInstance().initialize(getActivity(),appName);
+             callbackContext.success("Init Success");
+
+
+
+
+
+
 
 
 
        }
      else if(action.equals("transactionEX")){
-         this.callbackContext = callbackContext;
+         this.transactionCB = callbackContext;
          cordova.getThreadPool().execute(new Runnable() {
            @Override
            public void run() {
@@ -166,17 +213,21 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
          });
          return true;
        }
-     else if(action.equals("t")){
-         TransactionIn transIn = new TransactionIn();
-         TransactionOut result=new TransactionOut();
-         String amount = "995";
-         transIn.setAmount(amount);
-         transIn.setCurrencyCode("978");
-         transIn.setOperation("C");
-         transIn.setTermNum("58");
-         Log.d(TAG,"envio Tramas!!!!");
-         boolean trans = Datafono.getInstance().doTransaction(transIn,result);
-         callbackContext.success("getInfo");
+     else if(action.equals("devices")){
+         this.devicesCB=callbackContext;
+         cordova.getThreadPool().execute(new Runnable() {
+           @Override
+           public void run() {
+             try{
+               Datafono.getInstance().getDevices(getActivity(),Comdata.this);
+
+             }catch (Exception e){
+               callbackContext.error(e.toString());
+             }
+
+           }
+         });
+
        }
         return true;
     }
@@ -184,6 +235,20 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
 
   @Override
   public void responseDatafono(JSONArray response) {
-    callbackContext.success(response);
+    transactionCB.success(response);
+  }
+  @Override
+  public void disconnect(){
+   //Datafono.getInstance().stopPclService(getActivity());
+       disconnectCB.success(finish);
+  }
+  @Override
+  public void getDevices(JSONArray response){
+    devicesCB.success(response);
+
+  };
+  @Override
+  public  void connect(){
+    connectionCB.success(start);
   }
 }
