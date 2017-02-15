@@ -8,9 +8,11 @@ import com.ci24.datafono.Comdata;
 import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.LauncherApps;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
@@ -21,31 +23,53 @@ import android.provider.ContactsContract;
 import android.content.BroadcastReceiver;
 import android.util.Log;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaActivity;
+import org.apache.cordova.CordovaInterface;
 import org.json.JSONArray;
-
+import com.ingenico.pclutilities.PclUtilities;
+import com.ingenico.pclutilities.PclUtilities.BluetoothCompanion;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.util.Set;
+
 
 import static org.apache.cordova.device.Device.TAG;
 
 
-public class Datafono {
-
-
+public class Datafono  {
   protected PclService mPclService = null;
   private IfaceCallbackDatafono callback;
   private static Boolean m_BarCodeActivated = false;
-private static Datafono datafono;
+  private static Datafono datafono;
+  private PclUtilities mPclUtil;
+  boolean mServiceStarted=false;
+  private PclServiceConnection mServiceConnection;
+  int SN, PN;
+  String pack="com.ionicframework.plugindata691535";
+
+  public boolean pclServiceStarted=false;
 
   public static Datafono getInstance(){
-
     if(datafono == null){
         datafono = new Datafono();
     }
     return datafono;
+  }
+
+   public void startPclService(Activity act) {
+    if (!mServiceStarted){
+      Intent i = new Intent(act, PclService.class);
+      i.putExtra("PACKAGE_NAME", pack);
+      i.putExtra("FILE_NAME", "pairing_addr.txt");
+      if (act.getApplicationContext().startService(i) != null)
+      {
+        mServiceStarted = true;
+      }
+    }
 
   }
+
   public boolean isCompanionConnected()   {
     boolean bRet = false;
     if (mPclService != null)
@@ -63,6 +87,46 @@ private static Datafono datafono;
   }
 
   protected _SYSTEMTIME sysTime;
+
+  public void stopPclService(Activity activity) {
+     if(mServiceStarted){
+      Intent i = new Intent(activity, PclService.class);
+      if (activity.getApplicationContext().stopService(i)) {
+        mServiceStarted=false;
+        pclServiceStarted=false;
+      }
+    }
+  }
+
+  public void getDevices(Activity act,IfaceCallbackDatafono callback) {
+    try{
+
+      Set<PclUtilities.BluetoothCompanion> btComps = mPclUtil.GetPairedCompanions();
+      JSONArray devicesResponse=new JSONArray();
+      this.callback=callback;
+      String data=null;
+
+      if (btComps != null && (btComps.size() > 0)) {
+       int i=0;
+        for (PclUtilities.BluetoothCompanion comp : btComps) {
+          Log.d(TAG, comp.getBluetoothDevice().getName()+"//"+comp.getBluetoothDevice().getAddress());
+          data=comp.getBluetoothDevice().getName()+"//"+comp.getBluetoothDevice().getAddress();
+          devicesResponse.put(i,data);
+            i++;
+         }
+      }
+      callback.getDevices(devicesResponse);
+    }catch (Exception e){
+      Log.d(TAG,e.toString());
+    }
+  }
+
+  public void initialize(Activity activity,String appName) {
+    pack=appName;
+    mPclUtil=new PclUtilities(activity,pack,"pairing_addr.txt");
+
+  }
+
   public class _SYSTEMTIME   {
     // WORD = UInt16
     public short wYear;
@@ -74,6 +138,7 @@ private static Datafono datafono;
     public short wSecond;
     public short wMilliseconds;
   }
+
   public String getTime() {
     boolean ret = false;
     byte[] time = new byte[16];
@@ -102,7 +167,7 @@ private static Datafono datafono;
 
      return sysTime.toString();
   }
-  int SN, PN;
+
   public boolean getTermInfo() {
     boolean ret = false;
     byte[] serialNbr = new byte[4];
@@ -207,7 +272,6 @@ private static Datafono datafono;
   };
 
   public void doTransactionEx(IfaceCallbackDatafono callback, TransactionIn transIn, TransactionOut transOut, int appNumber, byte[] extDataIn, int inBufferSize, byte[] extDataOut, long[] extDataOutSize) {
-
     this.callback = callback;
     if( mPclService != null ) {
       try {
@@ -216,8 +280,6 @@ private static Datafono datafono;
         iae.printStackTrace();
       }
     }
-
-
   }
 
   class DoTransactionExTask extends AsyncTask<Void, Void, Boolean> {
@@ -227,6 +289,7 @@ private static Datafono datafono;
     private byte[] extDataOut;
     private long[] extDataOutSize;
     private int appNumber;
+
     public DoTransactionExTask(TransactionIn transIn, TransactionOut transOut, int appNumber, byte[] extDataIn, byte[] extDataOut) {
       this.transIn = transIn;
       this.transOut = transOut;
@@ -241,8 +304,8 @@ private static Datafono datafono;
       Boolean ret=mPclService.doTransactionEx(transIn, transOut, appNumber, extDataIn, extDataIn.length, extDataOut, extDataOutSize);
       return ret;
     }
-    protected void onPostExecute(Boolean result) {
 
+    protected void onPostExecute(Boolean result) {
       JSONArray respuesta = new JSONArray();
       int responseSize=0;
       int len = extDataOut[1];
@@ -282,9 +345,6 @@ private static Datafono datafono;
     }
   }
 
-
-
-
   public boolean getFullSerialNumber(byte[] serialNbr) {
     boolean ret = false;
 
@@ -299,7 +359,6 @@ private static Datafono datafono;
     return ret;
 
   }
-
 
   public boolean openBarCode() {
     Log.d(TAG, "openBarCode" );
@@ -338,43 +397,160 @@ private static Datafono datafono;
     return result;
   }
 
-  private PclServiceConnection mServiceConnection;
-
-public class PclServiceConnection implements ServiceConnection {
-
+  public class PclServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName className, IBinder boundService ){
           PclService.LocalBinder binder = (PclService.LocalBinder) boundService;
           mPclService = (PclService) binder.getService();
           Log.d(TAG, "onServiceConnected" );
+          if(!pclServiceStarted){
+            callback.connect();
+            pclServiceStarted=true;
+
+          }
            }
 
         public void onServiceDisconnected(ComponentName className) {
                 mPclService = null;
                 Log.d(TAG, "onServiceDisconnected" );
             }
+
     };
 
 
+public void pairCompanion(Activity act,String macAddress,IfaceCallbackDatafono callback){
+try{
+  this.callback=callback;
+  int f= mPclUtil.ActivateCompanion(macAddress);
+  Log.d(TAG, String.valueOf(f));
+  if(f==0){
+    startPclService(act);
+    initService(act);
+  }
 
+}catch (Exception e){
+  Log.d(TAG,e.toString());
+}
+
+
+}
+  public void startCompanion(Activity act){
+    try{
+      mPclUtil=new PclUtilities(act,pack,"pairing_addr.txt");
+      Set<PclUtilities.BluetoothCompanion> btComps = mPclUtil.GetPairedCompanions();
+      String device = null;
+      boolean bFound = false;
+
+      if (btComps != null && (btComps.size() > 0)) {
+        // Loop through paired devices
+        for (PclUtilities.BluetoothCompanion comp : btComps) {
+          Log.d(TAG, comp.getBluetoothDevice().getAddress());
+          Log.d(TAG,comp.getBluetoothDevice().getName());
+          device=comp.getBluetoothDevice().getAddress();
+          if(comp.isActivated()){
+            bFound=true;
+          }
+
+          //   radioButton.setText(comp.getBluetoothDevice().getAddress() + " - " + comp.getBluetoothDevice().getName());
+
+        //  device=comp.getBluetoothDevice().getName();
+ /*         if(comp.activate()){
+            Log.d(TAG,"dispositivo activado........");
+          }*/
+
+
+
+
+        }
+      }
+      String activated=null;
+
+      if (!bFound) {
+        activated = mPclUtil.getActivatedCompanion();
+
+
+        Log.d(TAG,activated);
+      }
+
+
+
+      Log.d(TAG,btComps.toString());
+      try{
+      //  Log.d(TAG,device);
+      //  Log.d(TAG,device.substring(0, 17));
+
+        int f= mPclUtil.ActivateCompanion(device);
+        Log.d(TAG, String.valueOf(f));
+
+
+      }catch (Exception e){
+        Log.d(TAG,e.toString());
+
+      }
+
+      try{
+        startPclService(act);
+
+      }catch (Exception e){
+        Log.d(TAG,e.toString());
+
+      }
+      try {
+       // initService(act);
+
+      }catch (Exception e){
+        Log.d(TAG,e.toString());
+
+      }
+
+
+
+    }catch (Exception e){
+      Log.d(TAG,e.toString());
+    }
+  }
+  protected boolean mBound = false;
 public  void  initService(Activity act){
+try{
 
-mServiceConnection = new PclServiceConnection();
+  mServiceConnection = new PclServiceConnection();
 
-Intent intent = new Intent(act, PclService.class);
 
-act.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+}catch (Exception e){
+  Log.d(TAG,e.toString());
+}
+
+  Intent intent = new Intent(act, PclService.class);
+  intent.putExtra("PACKAGE_NAME", pack);
+  intent.putExtra("FILE_NAME", "pairing_addr.txt");
+try{
+  act.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+}catch (Exception e){
+  Log.d(TAG,e.toString());
+}
 
 }
   // You can call this method in onDestroy for instance
 
-public void releaseService(Activity act){
-
+public void releaseService(Activity act,IfaceCallbackDatafono callback){
+   this.callback=callback;
+  if(mServiceStarted){
+    Intent i = new Intent(act, PclService.class);
+    if (act.getApplicationContext().stopService(i)) {
+      mServiceStarted=false;
+      pclServiceStarted=false;
+    }
+  }
   act.unbindService(mServiceConnection);
   Log.d(TAG, "onServiceDisconnected" );
+  callback.disconnect();
 }
 
 
 
 
-};
+
+
+}
 
