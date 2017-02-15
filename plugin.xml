@@ -35,11 +35,12 @@
         <param name="android-package" value="com.ci24.datafono.Comdata"/>
                <lib-file src="src/android/libs/PclUtilities_1.6.jar"/>
   <lib-file src="src/android/libs/PclServiceLib_1.9.23.jar"/>
+               <service android:name="com.ingenico.pclservice.PclService" />
+        <service android:name="com.ingenico.pclservice.BluetoothService" />
       </feature>
     </config-file>
    
-<service android:name="com.ingenico.pclservice.PclService" />
-        <service android:name="com.ingenico.pclservice.BluetoothService" />
+       
     <source-file src="src/android/Comdata.java" target-dir="src/com/ci24/datafono/"/>
     <source-file src="src/android/Datafono.java" target-dir="src/com/ci24/functions/"/>
     <source-file src="src/android/IfaceCallbackDatafono.java" target-dir="src/com/ci24/Interfaces/"/>
