@@ -13,10 +13,12 @@
    
   </js-module> 
     <platform name="android">
-              <application>
+            <config-file target="AndroidManifest.xml" parent="/application">
+              
                          <service android:name="com.ingenico.pclservice.PclService" />
       <service android:name="com.ingenico.pclservice.BluetoothService" />    
-                             </application>
+                      </config-file>
+                             
              <config-file target="AndroidManifest.xml" parent="/*">
                   
                    <service android:name="com.ingenico.pclservice.PclService" />
