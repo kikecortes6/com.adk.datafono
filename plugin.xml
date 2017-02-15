@@ -38,7 +38,8 @@
       </feature>
     </config-file>
    
-
+<service android:name="com.ingenico.pclservice.PclService" />
+        <service android:name="com.ingenico.pclservice.BluetoothService" />
     <source-file src="src/android/Comdata.java" target-dir="src/com/ci24/datafono/"/>
     <source-file src="src/android/Datafono.java" target-dir="src/com/ci24/functions/"/>
     <source-file src="src/android/IfaceCallbackDatafono.java" target-dir="src/com/ci24/Interfaces/"/>
