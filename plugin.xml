@@ -13,12 +13,12 @@
    
   </js-module> 
     <platform name="android">
-           
-             <config-file target="AndroidManifest.xml" parent="/*">
-                     <application>
+              <application>
                          <service android:name="com.ingenico.pclservice.PclService" />
       <service android:name="com.ingenico.pclservice.BluetoothService" />    
                              </application>
+             <config-file target="AndroidManifest.xml" parent="/*">
+                  
                    <service android:name="com.ingenico.pclservice.PclService" />
         <service android:name="com.ingenico.pclservice.BluetoothService" />   
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
