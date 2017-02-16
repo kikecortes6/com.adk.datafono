@@ -48,7 +48,7 @@ public class Datafono  {
   int SN, PN;
   String pack="com.ionicframework.plugindata691535";
 
-  public boolean pclServiceStarted=false;
+
 
   public static Datafono getInstance(){
     if(datafono == null){
@@ -69,21 +69,24 @@ public class Datafono  {
     }
 
   }
-
+    public boolean dis=true;
   public boolean isCompanionConnected()   {
     boolean bRet = false;
-    if (mPclService != null)
-    {
-      byte result[] = new byte[1];
-      {
-        if (mPclService.serverStatus(result) == true)
+
+
+
+      if (mPclService != null) {
+        byte result[] = new byte[1];
         {
-          if (result[0] == 0x10)
-            bRet = true;
+          if (mPclService.serverStatus(result) == true) {
+            if (result[0] == 0x10)
+              bRet = true;
+          }
         }
       }
-    }
-    return bRet;
+
+      return bRet;
+
   }
 
   protected _SYSTEMTIME sysTime;
@@ -93,7 +96,7 @@ public class Datafono  {
       Intent i = new Intent(activity, PclService.class);
       if (activity.getApplicationContext().stopService(i)) {
         mServiceStarted=false;
-        pclServiceStarted=false;
+
       }
     }
   }
@@ -398,15 +401,13 @@ public class Datafono  {
   }
 
   public class PclServiceConnection implements ServiceConnection {
+
         public void onServiceConnected(ComponentName className, IBinder boundService ){
           PclService.LocalBinder binder = (PclService.LocalBinder) boundService;
           mPclService = (PclService) binder.getService();
           Log.d(TAG, "onServiceConnected" );
-          if(!pclServiceStarted){
-            callback.connect();
-            pclServiceStarted=true;
+          callback.connect();
 
-          }
            }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -510,40 +511,46 @@ try{
   }
   protected boolean mBound = false;
 public  void  initService(Activity act){
-try{
-
-  mServiceConnection = new PclServiceConnection();
-
+  if (!mBound) {
+    try {
 
 
-}catch (Exception e){
-  Log.d(TAG,e.toString());
-}
+      mServiceConnection = new PclServiceConnection();
 
-  Intent intent = new Intent(act, PclService.class);
-  intent.putExtra("PACKAGE_NAME", pack);
-  intent.putExtra("FILE_NAME", "pairing_addr.txt");
-try{
-  act.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-}catch (Exception e){
-  Log.d(TAG,e.toString());
-}
+    } catch (Exception e) {
+      Log.d(TAG, e.toString());
+    }
 
+    Intent intent = new Intent(act, PclService.class);
+    intent.putExtra("PACKAGE_NAME", pack);
+    intent.putExtra("FILE_NAME", "pairing_addr.txt");
+    try {
+      mBound=act.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+    } catch (Exception e) {
+      Log.d(TAG, e.toString());
+    }
+
+  }
 }
   // You can call this method in onDestroy for instance
 
 public void releaseService(Activity act,IfaceCallbackDatafono callback){
    this.callback=callback;
-  if(mServiceStarted){
+  if(mBound){
     Intent i = new Intent(act, PclService.class);
     if (act.getApplicationContext().stopService(i)) {
       mServiceStarted=false;
-      pclServiceStarted=false;
+      mBound=false;
     }
+    act.unbindService(mServiceConnection);
+    mBound=false;
   }
-  act.unbindService(mServiceConnection);
+
   Log.d(TAG, "onServiceDisconnected" );
+  dis=false;
+  mPclService=null;
   callback.disconnect();
 }
 
