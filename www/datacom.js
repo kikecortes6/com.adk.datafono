@@ -5,8 +5,8 @@ module.exports = (function() {
   var _connect = function (args,successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "connect", [args]);
     };
-  var _checkConnection =function (args,successCallback, errorCallback) {
-      cordova.exec(successCallback, errorCallback, "Comdata", "check", [args]);
+  var _checkConnection =function (successCallback, errorCallback) {
+      cordova.exec(successCallback, errorCallback, "Comdata", "check", []);
     };
   var _disconnect =function (successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "finish", []);
