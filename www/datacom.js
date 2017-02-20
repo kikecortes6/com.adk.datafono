@@ -20,6 +20,15 @@ module.exports = (function() {
   var _getDevices =function (successCallback, errorCallback) {
       cordova.exec(successCallback, errorCallback, "Comdata", "devices", []);
     };
+  var _getInfo =function (successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, "Comdata", "getInfo", []);
+  };
+  var _getBatteryLevel =function (successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, "Comdata", "getBatteryLevel", []);
+  };
+  var _getTime =function (successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, "Comdata", "getTime", []);
+  };
 
    return {
     connect: _connect,
@@ -27,10 +36,13 @@ module.exports = (function() {
     disconnect:_disconnect,
     init:_init,
     transactionEX:_transactionEX,
-    getDevices:_getDevices
+    getDevices:_getDevices,
+    getInfo:_getInfo,
+    getBatteryLevel:_getBatteryLevel,
+    getTime:_getTime
 
 
-  };
+   };
 
 })();
 
