@@ -47,22 +47,21 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
  @Override
     public boolean execute(String action, final JSONArray args,final  CallbackContext callbackContext) throws JSONException {
 
+
+   // Funcion de conectar el dispositivo, se ingresa la mac del mini datafono
+   // retorna un callback de error o de exito si el dispositivo esta conectado
        if (action.equals("connect")) {
          try {
-           cordova.getThreadPool().execute(new Runnable() {
+          cordova.getThreadPool().execute(new Runnable() {
              @Override
              public void run() {
-           //    Datafono.getInstance().startPclService(getActivity());
-
                String mac= null;
                try {
                  mac = (String)args.getString(0);
                } catch (JSONException e) {
                  Log.d(TAG,e.toString());
                  return;
-
                }
-
                try {
                  Datafono.getInstance().pairCompanion(getActivity(),mac,Comdata.this);
                } catch (Exception e) {
@@ -72,105 +71,86 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
              }
            });
            this.connectionCB=callbackContext;
-          // callbackContext.success(start);
          }catch (Exception e){
            callbackContext.error(e.toString());
          }
+        }
 
-
-        }else if(action.equals("check")){
+       //Función que chequea el estado del dispositivo sei esta conectado o desconectado.
+       else if(action.equals("check")){
           boolean check= Datafono.getInstance().isCompanionConnected();
             if(check==true){
               callbackContext.success("Connected");
             }else{
               callbackContext.error("Not Connected");
             }
+       }
 
-
-       }else if(action.equals("finish")){
+       //función que termina la conexión del dispositivo
+       // retorna un callback de error o de exito
+       else if(action.equals("finish")){
         try {
            this.disconnectCB=callbackContext;
            cordova.getThreadPool().execute(new Runnable() {
              @Override
              public void run() {
                Datafono.getInstance().releaseService(getActivity(), Comdata.this);
-
-
              }
              });
-
          }catch (Exception e){
            callbackContext.success(e.toString());
          }
+       }
 
-
-
-
-       }else if(action.equals("getInfo")){
+       //Función que retorna los seriales del dispositivo y del producto
+       else if(action.equals("getInfo")){
          String info= Datafono.getInstance().getTermInfo();
          if(info.equals("0")){
            callbackContext.error("No se pudo obterner la informació del dispositivo");
          }else {
            callbackContext.success(info);
          }
-
-
-
-       }else if(action.equals("getBatteryLevel")){
-
+       }
+       //Función que retorna el nivel de la bateria actual del dispositivo
+       else if(action.equals("getBatteryLevel")){
          int level= Datafono.getInstance().getBatteryLevel();
          if(level==-1){
            callbackContext.error("no se peude obtener el nivel de bateria");
          }else {
            callbackContext.success(level);
-
          }
-
-
-       }else if(action.equals("getTime")){
+       }
+       // Función de devuelve un string con la hora y fecha del dispositivo
+       else if(action.equals("getTime")){
          String time=Datafono.getInstance().getTime();
          if(time.equals("0")){
            callbackContext.error("No se puede obtener la fecha");
          }else {
            callbackContext.success(time);
          }
+       }
 
-
-   } else if(action.equals("init")){
-
-
+       //Función que inicializa parametros necesarios para la ejecución del programa
+       else if(action.equals("init")){
              String appName=null;
              try {
                appName=(String) args.getString(0);
              } catch (JSONException e) {
-
                callbackContext.error(e.toString());
                return true;
-
              }
              Datafono.getInstance().initialize(getActivity(),appName);
              callbackContext.success("Init Success");
-
-
-
-
-
-
-
-
-
        }
-     else if(action.equals("transactionEX")){
+       //función que recibe una trama y ejecuta la transacción retorna una trama de respuesta
+       else if(action.equals("transactionEX")){
          this.transactionCB = callbackContext;
          cordova.getThreadPool().execute(new Runnable() {
            @Override
            public void run() {
              TransactionIn transIn = new TransactionIn();
              TransactionOut transOut = new TransactionOut();
-
-
              long[] sizebuff = new long[5000];
-
              String amount = new String();
              String currencyCode = new String();
              String operation = new String();
@@ -199,11 +179,8 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
              } catch (Exception e) {
                Log.d(TAG, e.toString());
                callbackContext.error(e.toString());
-              // return true;
-
-             }
+               }
              sizeIn = trama.length();
-
              if (!amount.equals("")) { transIn.setAmount(amount); }
              if (!currencyCode.equals("")) { transIn.setCurrencyCode(currencyCode);}
              if (!operation.equals("")) { transIn.setOperation(operation); }
@@ -211,7 +188,6 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
              if (!authorizationType.equals("")) { transIn.setAuthorizationType(authorizationType); }
              if (!ctrlCheque.equals("")) { transIn.setCtrlCheque(ctrlCheque); }
              if (!userData1.equals("")) { transIn.setUserData1(userData1); }
-
              byte tramaIn[] = new byte[sizeIn];
              for (int i = 0; i < sizeIn; i++) {
                try {
@@ -224,17 +200,13 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
                  callbackContext.error(e.toString());
                }
              }
-
              boolean check = Datafono.getInstance().isCompanionConnected();
-
              if (check == true) {
                try {
                  Log.d(TAG, "Amount:" + transIn.getAmount() + " Currency:" + transIn.getCurrencyCode() + " Operation:" + transIn.getOperation());
                  Log.d(TAG, "TermNum:" + transIn.getTermNum() + " AuthoType:" + transIn.getAuthorizationType() + " CtrlCheque:" + transIn.getCtrlCheque());
                  Log.d(TAG, "UserData:" + transIn.getUserData1());
-
                  Datafono.getInstance().doTransactionEx(Comdata.this, transIn, transOut, appNumber, tramaIn, sizeIn, extDataOut, sizebuff);
-
                } catch (Exception e) {
                  Log.d(TAG, e.toString());
                  callbackContext.error(e.toString());
@@ -246,6 +218,7 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
          });
          return true;
        }
+       //función que retorna las mac y nlos nombres de los dispositivos compatibles ya emparejados
      else if(action.equals("devices")){
          this.devicesCB=callbackContext;
          cordova.getThreadPool().execute(new Runnable() {
@@ -257,28 +230,26 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
              }catch (Exception e){
                callbackContext.error(e.toString());
              }
-
            }
          });
-
        }
         return true;
     }
 
 
+
+  //Funciones de callback para funciones syncornas
   @Override
   public void responseDatafono(JSONArray response) {
     transactionCB.success(response);
   }
   @Override
   public void disconnect(){
-   //Datafono.getInstance().stopPclService(getActivity());
-       disconnectCB.success(finish);
+   disconnectCB.success(finish);
   }
   @Override
   public void getDevices(JSONArray response){
     devicesCB.success(response);
-
   };
   @Override
   public  void connect(){
