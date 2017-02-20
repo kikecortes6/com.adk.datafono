@@ -86,8 +86,9 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
               callbackContext.error("Not Connected");
             }
 
+
        }else if(action.equals("finish")){
-         try {
+        try {
            this.disconnectCB=callbackContext;
            cordova.getThreadPool().execute(new Runnable() {
              @Override
@@ -103,7 +104,39 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
          }
 
 
-       }else if(action.equals("init")){
+
+
+       }else if(action.equals("getInfo")){
+         String info= Datafono.getInstance().getTermInfo();
+         if(info.equals("0")){
+           callbackContext.error("No se pudo obterner la informació del dispositivo");
+         }else {
+           callbackContext.success(info);
+         }
+
+
+
+       }else if(action.equals("getBatteryLevel")){
+
+         int level= Datafono.getInstance().getBatteryLevel();
+         if(level==-1){
+           callbackContext.error("no se peude obtener el nivel de bateria");
+         }else {
+           callbackContext.success(level);
+
+         }
+
+
+       }else if(action.equals("getTime")){
+         String time=Datafono.getInstance().getTime();
+         if(time.equals("0")){
+           callbackContext.error("No se puede obtener la fecha");
+         }else {
+           callbackContext.success(time);
+         }
+
+
+   } else if(action.equals("init")){
 
 
              String appName=null;
