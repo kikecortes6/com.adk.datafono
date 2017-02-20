@@ -89,7 +89,7 @@ public class Datafono  {
 
   }
 
-  protected _SYSTEMTIME sysTime;
+
 
   public void stopPclService(Activity activity) {
      if(mServiceStarted){
@@ -142,11 +142,14 @@ public class Datafono  {
     public short wMilliseconds;
   }
 
+  protected _SYSTEMTIME sysTime;
+
   public String getTime() {
     boolean ret = false;
     byte[] time = new byte[16];
+    String dateTime=null;
     if( mPclService != null ) {
-      {
+
         sysTime = new _SYSTEMTIME();
         ret = mPclService.getTerminalTime(time);
         ByteBuffer bbTime = ByteBuffer.wrap(time);
@@ -159,25 +162,30 @@ public class Datafono  {
         sysTime.wMinute = bbTime.getShort();
         sysTime.wSecond = bbTime.getShort();
         sysTime.wMilliseconds = bbTime.getShort();
+        dateTime= String.valueOf(sysTime.wHour)+":"+String.valueOf(sysTime.wMinute)+":"+String.valueOf(sysTime.wSecond)+" "+String.valueOf(sysTime.wYear)+"/"+String.valueOf(sysTime.wMonth)+"/"+String.valueOf(sysTime.wDay);
+
+
+      return dateTime;
 
 
 
-      }
-
-
+    }else{
+      return "0";
     }
 
 
-     return sysTime.toString();
+
   }
 
-  public boolean getTermInfo() {
+  public String getTermInfo() {
     boolean ret = false;
     byte[] serialNbr = new byte[4];
     byte[] productNbr = new byte[4];
+    String info=null;
     if( mPclService != null ) {
-      {
+
         ret = mPclService.getTerminalInfo(serialNbr, productNbr);
+
         ByteBuffer bbSN = ByteBuffer.wrap(serialNbr);
         ByteBuffer bbPN = ByteBuffer.wrap(productNbr);
         bbSN.order(ByteOrder.LITTLE_ENDIAN);
@@ -187,9 +195,29 @@ public class Datafono  {
         Log.d(TAG,"valores de info ");
         Log.d(TAG,String.valueOf(SN));
         Log.d(TAG,String.valueOf(PN));
-      }
+        info=String.valueOf(SN)+"//"+String.valueOf(PN);
+
+      return info;
+    }else {
+
+
+      return "0";
     }
-    return ret;
+
+
+  }
+  public int getBatteryLevel(){
+    int level=0;
+    int t[]= new int[1];
+    if(mPclService!=null) {
+
+
+      mPclService.getBatteryLevel(t);
+      level = t[0];
+      return level;
+    }else {
+      return -1;
+    }
 
   }
   public boolean printText( String strText ) {
@@ -348,20 +376,7 @@ public class Datafono  {
     }
   }
 
-  public boolean getFullSerialNumber(byte[] serialNbr) {
-    boolean ret = false;
 
-    if( mPclService != null ) {
-      {
-        ret = mPclService.getFullSerialNumber(serialNbr);
-        ByteBuffer bbSN = ByteBuffer.wrap(serialNbr);
-        bbSN.order(ByteOrder.LITTLE_ENDIAN);
-        SN = bbSN.getInt();
-      }
-    }
-    return ret;
-
-  }
 
   public boolean openBarCode() {
     Log.d(TAG, "openBarCode" );
@@ -509,6 +524,7 @@ try{
       Log.d(TAG,e.toString());
     }
   }
+
   protected boolean mBound = false;
 public  void  initService(Activity act){
   if (!mBound) {
