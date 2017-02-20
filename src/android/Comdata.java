@@ -104,30 +104,47 @@ public class Comdata extends CordovaPlugin implements IfaceCallbackDatafono {
 
        //Función que retorna los seriales del dispositivo y del producto
        else if(action.equals("getInfo")){
-         String info= Datafono.getInstance().getTermInfo();
-         if(info.equals("0")){
-           callbackContext.error("No se pudo obterner la informació del dispositivo");
-         }else {
-           callbackContext.success(info);
-         }
+         
+         cordova.getThreadPool().execute(new Runnable() {
+           @Override
+           public void run() {
+              String info = Datafono.getInstance().getTermInfo();
+             if(info.equals("0")){
+               callbackContext.error("No se pudo obterner la informació del dispositivo");
+             }else {
+               callbackContext.success(info);
+             }
+           }
+         });
+        
        }
        //Función que retorna el nivel de la bateria actual del dispositivo
        else if(action.equals("getBatteryLevel")){
-         int level= Datafono.getInstance().getBatteryLevel();
-         if(level==-1){
-           callbackContext.error("no se peude obtener el nivel de bateria");
-         }else {
-           callbackContext.success(level);
-         }
+         cordova.getThreadPool().execute(new Runnable() {
+           @Override
+           public void run() {
+             int level = Datafono.getInstance().getBatteryLevel();
+             if (level == -1) {
+               callbackContext.error("no se peude obtener el nivel de bateria");
+             } else {
+               callbackContext.success(level);
+             }
+           }
+         });
        }
        // Función de devuelve un string con la hora y fecha del dispositivo
        else if(action.equals("getTime")){
-         String time=Datafono.getInstance().getTime();
-         if(time.equals("0")){
-           callbackContext.error("No se puede obtener la fecha");
-         }else {
-           callbackContext.success(time);
-         }
+         cordova.getThreadPool().execute(new Runnable() {
+           @Override
+           public void run() {
+             String time = Datafono.getInstance().getTime();
+             if (time.equals("0")) {
+               callbackContext.error("No se puede obtener la fecha");
+             } else {
+               callbackContext.success(time);
+             }
+           }
+         });
        }
 
        //Función que inicializa parametros necesarios para la ejecución del programa
