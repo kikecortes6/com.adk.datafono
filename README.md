@@ -79,8 +79,52 @@ datacom.transactionEX(args,function (data) {
 
 ```
 
+## datacom.init
+```
+datacom.init(args,function (data) {
+          Callback("Datafono: "+data);
+        },function (error) {
+          Error(error);
+        })
 
+```
+### datacom.getDevices
+```
+datacom.getDevices(function (data) {
+          Callback(data);
+var Macs=data;
+        },function (error) {
+          Error(error);
+        })
+```
+### datacom.getTime
+```
+datacom.getTime(function (data) {
+          console.log(data);
+          Callback(data);
+        },function (error) {
+          Error(error);
+        })
+  ```      
+### datacom.getBatteryLevel
+```
+datacom.getBatteryLevel(function (level) {
+          Callback(level);
+          var Nivel=level;
+        },function (error) {
+          Error(error);
+        })
+  ```      
+### datacom.getInfo
+```
+datacom.getInfo(function (serial) {
+          Callback(serial);
+          console.log(serial);
+        },function (error) {
+          Error(error);
+        })
 
+```
 ## Authors
 
 * **Oscar Cortes** - 
