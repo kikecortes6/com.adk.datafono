@@ -20,11 +20,6 @@ cordova plugin add https://github.com/kikecortes6/com.ci24.datafono.git
 
 These are functions that you can call into your ionic project
 
-### datacom.connect 
-###datacom.checkConnection 
-###datacom.disconnect 
-###datacom.transactionEX
-
 ### datacom.connect
 
 datacom.connect(
