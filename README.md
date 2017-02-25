@@ -22,12 +22,12 @@ These are functions that you can call into your ionic project
 
 ### datacom.connect
 
->datacom.connect(
->function (data) {
-> //Conecction successfull 
-> },function (err) { 
-> //Error trying to connect console.log(err); 
-> });
+>-datacom.connect(
+>-function (data) {
+>- //Conecction successfull 
+>- },function (err) { 
+>- //Error trying to connect console.log(err); 
+>- });
 
 ### datacom.checkConnection
 
