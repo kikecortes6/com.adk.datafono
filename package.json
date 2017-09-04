@@ -1,0 +1,33 @@
+{
+  "name": "com.ci24.datafono",
+  "version": "1.0.0",
+  "description": "Datafono Plugin",
+  "cordova": {
+    "id": "com.ci24.datafono",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kikecortes6/com.ci24.datafono.git"
+  },
+  "keywords": [
+    "cordova",
+    "datafono"
+   
+  ],
+  "scripts": {
+    "test": "npm run eslint",
+    "eslint": "node node_modules/eslint/bin/eslint www && node node_modules/eslint/bin/eslint src && node node_modules/eslint/bin/eslint tests"
+  },
+  "author": "Oscar Cortes",
+  "license": "Controles Inteligentes",
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova": ">100"
+      }
+    }
+  }
+}
