@@ -1,10 +1,10 @@
 
-package com.ci24.functions;
+package com.adk.functions;
 
-import com.ci24.Interfaces.IfaceCallbackDatafono;
+import com.adk.Interfaces.IfaceCallbackDatafono;
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
-import com.ci24.datafono.Comdata;
+import com.adk.datafono.Comdata;
 import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.IntentFilter;
