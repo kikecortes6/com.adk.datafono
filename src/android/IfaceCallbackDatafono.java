@@ -1,4 +1,4 @@
-package com.ci24.Interfaces;
+package com.adk.Interfaces;
 
 import org.json.JSONArray;
 
