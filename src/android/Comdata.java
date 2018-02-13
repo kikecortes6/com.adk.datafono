@@ -1,6 +1,6 @@
-package com.ci24.datafono;
-import com.ci24.Interfaces.IfaceCallbackDatafono;
-import com.ci24.functions.Datafono;
+package com.adk.datafono;
+import com.adk.Interfaces.IfaceCallbackDatafono;
+import com.adk.functions.Datafono;
 import com.ingenico.pclutilities.*;
 import com.ingenico.pclservice.*;
 import org.apache.cordova.CallbackContext;
