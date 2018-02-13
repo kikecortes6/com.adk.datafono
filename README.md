@@ -1,4 +1,4 @@
-# com.ci24.datafono
+# com.adk.datafono
 
 plugin for Bluetooth payment communication
 
@@ -14,7 +14,7 @@ for Android 4.4 or later
 
 ### Installing
 
-cordova plugin add https://github.com/kikecortes6/com.ci24.datafono.git
+cordova plugin add https://github.com/kikecortes6/com.adk.datafono.git
 
 ## Methods
 
