@@ -39,7 +39,7 @@
        
       <feature name="Comdata">
               
-        <param name="android-package" value="com.ci24.datafono.Comdata"/>
+        <param name="android-package" value="com.adk.datafono.Comdata"/>
                <lib-file src="src/android/libs/PclUtilities_1.6.jar"/>
   <lib-file src="src/android/libs/PclServiceLib_1.9.23.jar"/>
           
@@ -47,9 +47,9 @@
     </config-file>
    
        
-    <source-file src="src/android/Comdata.java" target-dir="src/com/ci24/datafono/"/>
-    <source-file src="src/android/Datafono.java" target-dir="src/com/ci24/functions/"/>
-    <source-file src="src/android/IfaceCallbackDatafono.java" target-dir="src/com/ci24/Interfaces/"/>
+    <source-file src="src/android/Comdata.java" target-dir="src/com/adk/datafono/"/>
+    <source-file src="src/android/Datafono.java" target-dir="src/com/adk/functions/"/>
+    <source-file src="src/android/IfaceCallbackDatafono.java" target-dir="src/com/adk/Interfaces/"/>
     <!--source-file src="src/android/libs/PclServiceExport_1.9.23.jar" target-dir="libs" framework="true" /-->
     <source-file src="src/android/libs/PclUtilities_1.6.jar" target-dir="libs" framework="true"/>
     <source-file src="src/android/libs/PclServiceLib_1.9.23.jar" target-dir="libs" framework="true"/>
