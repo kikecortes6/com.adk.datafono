@@ -255,7 +255,7 @@ public class Datafono  {
       else if(len==129){
         responseSize=extDataOut[2]+3;
       }else if(len==130){
-        responseSize=extDataOut[2]*10+extDataOut[3]+4;
+        responseSize=extDataOut[2]*16+extDataOut[3]+4;
       }
       if(responseSize<0){
         responseSize=responseSize+256;
